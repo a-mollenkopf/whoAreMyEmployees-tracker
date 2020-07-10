@@ -14,7 +14,7 @@ Open terminal and type npm install and install whatever packages are required at
 After installing, type node app.js and cycle through the prompts!
 
 
-<img src="employee.tracker.PNG"/>
+<img src="employee-tracker.PNG"/>
 
 # Features
 
