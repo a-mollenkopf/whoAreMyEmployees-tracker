@@ -30,6 +30,9 @@ This project furthered my knowledge of CLI and the use of node to do so. It help
 <img src="employeetracker.PNG"/>
 
 
+[It shows up in the preview but not the repo](https://photos.app.goo.gl/mrSP9XTZ8jBeLRMYA)
+
+
 
 
 # Credits
