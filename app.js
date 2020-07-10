@@ -46,11 +46,11 @@ function mainMenu() {
           viewAllEmployees();
           break;
 
-        case "View all employees by department":
+        case "View all departments":
           viewAllDepartments();
           break;
 
-        case "View all employees by role":
+        case "View all roles":
           viewAllRoles();
           break;
 
@@ -67,7 +67,7 @@ function mainMenu() {
         case "Update employee role":
           updateEmployeesRole();
           break;
-        case "EXIT":
+        case "Exit":
           endApp();
           break;
         default:
@@ -77,8 +77,7 @@ function mainMenu() {
 }
 
 function viewAllEmployees() {
-  let query = connection.query(
-    "SELECT * FROM employee", function (err, res) {
+  connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
     console.log(res.length + " employees found!");
     console.table("All Employees:", res);
@@ -87,8 +86,7 @@ function viewAllEmployees() {
 }
 
 function viewAllDepartments() {
-  let query = connection.query(
-    "SELECT * FROM department", function (err, res) {
+  let query = connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
     console.table("All Departments:", res);
     mainMenu();
@@ -104,9 +102,10 @@ function viewAllRoles() {
 }
 
 function addEmployee() {
-  connection.query("SELECT * FROM role", function (err, res) {
-    if (err) throw err;
-
+  connection.query(
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name, role.salary, manager.first_name AS manager_first, manager.last_name AS manager_last FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;", 
+    function (err, data) {
+    const roleArray = data.map((object) => object.title);
     inquirer
       .prompt([
         {
@@ -121,39 +120,33 @@ function addEmployee() {
         },
         {
           type: "list",
-          name: "role",
-          choices: function () {
-            var roleArray = [];
-            for (let i = 0; i < res.length; i++) {
-              roleArray.push(res[i].title);
-            }
-            return roleArray;
-          },
-          message: "What is this employee's role? ",
+          name: "title",
+          message: "What is the employees title?",
+          choices: roleArray,
         },
       ])
-      .then(
-        function (answer) {
-          let roleID;
-          for (let i = 0; i < res.length; i++) {
-            roleID = res[i].id;
-            console.log(roleID);
+      .then(function (response) {
+        let roleID = {};
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].title === response.title) {
+            roleID = data[i];
           }
-        },
+        }
+        const { first_name, last_name } = response;
         connection.query(
           "INSERT INTO employee SET ?",
           {
-            first_name: answer.first_name,
-            last_name: answer.last_name,
-            role_id: roleID,
+            first_name: first_name,
+            last_name: last_name,
+            role_id: roleID.id,
           },
           function (err) {
             if (err) throw err;
             console.log("Your employee has been added!");
             mainMenu();
           }
-        )
-      );
+        );
+      });
   });
 }
 
@@ -232,7 +225,51 @@ function addRole() {
   });
 }
 
-function updateEmployeesRole() {}
+function updateEmployeesRole() {
+    connection.query("SELECT * FROM employee", function (err, data) {
+      const roleArray = data.map((data) => data.title);
+      const arrayOfEmployees = data.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name} `,
+        value: id,
+      }));
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "name",
+            message: "Which employee would you like to update?",
+            choices: arrayOfEmployees,
+          },
+          {
+            type: "list",
+            name: "updatedRole",
+            message: "What is this employee's updated role?",
+            choices: roleArray
+          },
+         
+        ])
+        .then((response) => {
+          let employeeEl = {};
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].id === response.updatedRole) {
+              employeeEl = data[i].id;
+            }
+          }
+          connection.query(
+            `UPDATE employee SET ? WHERE id = ${employeeEl}`,
+           
+            {
+              role: response.updatedRole,
+            },
+            function (err) {
+              if (err) throw err;
+              console.log("Employee successfully updated.");
+              mainMenu();
+            }
+          );
+        });
+    });
+  }
 
 function endApp() {
   connection.end();
