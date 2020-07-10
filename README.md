@@ -18,7 +18,7 @@ After installing, type node app.js and cycle through the prompts!
 
 # Features
 
-This project furthered my knowledge of CLI and the use of node to do so. It helped me grasp mySQL and how to create tables and add information into those tables. I was having a little bit of trouble getting the update employee role to work as well as the view all employees. It was showing the list of names 3 times in a row and I couldn't figure out why. It also wasn't updating all of my columns. It only showed the first 4. I got those bugs fixed. My only issue is with the readme. I have tried every method to get the photo of the app to show on the repo page but it just does not want to work. I've tried and img tag as well as the way I have it below and neither seemed to work.
+This project furthered my knowledge of CLI and the use of node to do so. It helped me grasp mySQL and how to create tables and add information into those tables. I was having a little bit of trouble getting the update employee role to work as well as the view all employees. It was showing the list of names 3 times in a row and I couldn't figure out why. It also wasn't updating all of my columns. It only showed the first 4. I got those bugs fixed.
 
 [github profile] (https://github.com/a-mollenkopf/whoAreMyEmployees-tracker)
 
@@ -27,7 +27,7 @@ This project furthered my knowledge of CLI and the use of node to do so. It help
 
 
 
-![alt text]("employeetracker.png")
+<img src="employeetracker.PNG"/>
 
 
 
